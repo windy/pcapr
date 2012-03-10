@@ -1,6 +1,6 @@
-
+require 'pcapr'
 if ARGV[0] == "-h" or ARGV[0] == "--help" or ARGV.size < 2
-  puts "Usage: #{$0} user pass [dir]"
+  puts "Usage: #{File.basename($0)} user pass [dir]"
   exit  0
 end
 
