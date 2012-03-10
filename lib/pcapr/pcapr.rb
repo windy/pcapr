@@ -29,7 +29,7 @@ class Pcapr
     uuid = Nokogiri::HTML(login_html.body).css('#uuid')[0]['value']
     
     login_result = @driver.post("/account/login", {:_user=>@user ,:pass=>@pass, :uuid=>"#{uuid}", :_auth=> auth_md5(@user,@pass,uuid)})
-    raise "登录失败" if login_result.url.include?("/account/login")
+    raise "login fail" if login_result.url.include?("/account/login")
   end
   
   #获取协议内容
@@ -37,7 +37,7 @@ class Pcapr
     return @protos if @protos
     protos_html = @driver.get("/browse/protos").body
     #获取协议内容
-    raise "获取协议内容失败" unless protos_html.match(/var raw = \(\{(.*)\}\)/)
+    raise "get protos fail,maybe this code is out of update" unless protos_html.match(/var raw = \(\{(.*)\}\)/)
     #格式为xx:1,xxx:2
     protos_str = $1
     @protos = str2protos(protos_str)
