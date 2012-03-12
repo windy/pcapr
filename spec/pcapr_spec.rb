@@ -6,6 +6,11 @@ describe Pcapr do
     pass="sinfor"
     @o = Pcapr.new(user,pass)
   end
+  
+  it "should show version" do
+    lambda { Pcapr::VERSION }.should_not raise_error
+  end
+  
   it "should login success" do
     lambda { @o.login }.should_not raise_error
   end

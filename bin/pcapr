@@ -1,6 +1,7 @@
 require 'pcapr'
 if ARGV[0] == "-h" or ARGV[0] == "--help" or ARGV.size < 2
   puts "Usage: #{File.basename($0)} user pass [dir]"
+  puts "Version: #{Pcapr::VERSION}"
   exit  0
 end
 
