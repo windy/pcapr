@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["yafei LI"]
   s.email       = ["lyfi2003@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{a libarily for downloading all pcap files from pcapr.net}
-  s.description = %q{a libarily for downloading all pcap files from pcapr.net}
+  s.summary     = %q{a library for downloading all pcap files from pcapr.net}
+  s.description = %q{a library for downloading all pcap files from pcapr.net}
 
   s.rubyforge_project = "pcapr"
 
