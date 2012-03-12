@@ -20,6 +20,12 @@ describe Pcapr do
   it "protos should get right" do
     @o.login
     @o.protos.should be_include("dns")
+    @o.protos.should be_include("gtp <ftp>")
+    @o.protos.should be_include("http/xml")
+    @o.protos.should be_include("ieee 802.15.4")
+    @o.protos.should be_include("ipx rip")
+    @o.protos.should be_include("megaco/sdp/sdp")
+    @o.protos.should be_include("m2pa (id 12)")
   end
   
   it "all_proto should get auth.cap" do

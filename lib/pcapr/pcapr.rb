@@ -61,13 +61,18 @@ class Pcapr
     login
     protos.each do |proto|
       proto_dir = File.join(base_dir, proto)
+      proto_dir.tr!("<>","")
       FileUtils.mkdir_p(proto_dir) unless File.directory?(proto_dir)
       logger.info "proto: #{proto}, downloading...(pcap save as: #{proto_dir}"
       pcap_urls(proto).each do |pcap_url|
         file = File.join(proto_dir, File.basename(pcap_url).gsub(/\.html$/,""))
         logger.info "  pcap file: #{file} save at '#{file}'"
-        pcap_file(pcap_url, file)
-        logger.debug "  save ok"
+        begin
+          pcap_file(pcap_url, file)
+          logger.debug "  save ok"
+        rescue Exception
+          logger.error " save fail: #{$!}"
+        end
       end
     end
   end
@@ -82,7 +87,7 @@ class Pcapr
   
   def str2protos(str)
     str.split(',').collect do |kv|
-      kv.split(':')[0].match(/(\w+)/) && $1
+      kv.split(':')[0].gsub("'","").strip
     end
   end
   
