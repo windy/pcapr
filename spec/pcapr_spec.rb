@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'digest'
+
 describe Pcapr do
   before(:each) do
     user= "bocycn@gmail.com"
@@ -46,13 +48,14 @@ describe Pcapr do
     File.delete(file) if File.exist?(file)
     @o.pcap_file(pcap_url,file)
     File.should be_exist(file)
-    #~ File.size(file).should == File.size(base)
+    File.size(file).should == File.size(base)
+    Digest::MD5.hexdigest(File.read(file)).should == Digest::MD5.hexdigest(File.read(base))
     File.delete(file) if File.exist?(file)
   end
   
-  it "run try" do
-    @o.run( File.join($helper_dir,"me") )
-  end
+  #~ it "run try" do
+    #~ @o.run( File.join($helper_dir,"me") )
+  #~ end
   
   
 end

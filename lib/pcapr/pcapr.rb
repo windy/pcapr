@@ -2,6 +2,7 @@ require 'logger'
 require 'nokogiri'
 require 'patron'
 require 'digest'
+require 'timeout'
 
 require 'fileutils'
 
@@ -51,9 +52,12 @@ class Pcapr
   
   #获取该数据包文件
   def pcap_file(pcap_url, file)
+    # set cookie
     @driver.get(pcap_url)
-    #~ file = @driver.get_file("/view/download", "d:/ok.pcap", "Referer"=>@driver.base_url + pcap_url)
-    file = @driver.get_file("/view/download", file)
+    res = @driver.get("/view/download")
+    File.open(file,"wb") do |f|
+      f.write(res.body)
+    end
   end
   
   def run(dir)
@@ -67,10 +71,14 @@ class Pcapr
         file = File.join( proto_dir, File.basename(pcap_url).gsub(/\.html$/,"").tr("\\/:*?\"<>|"," ") )
         logger.info "  pcap file: #{file} save at '#{file}'"
         begin
-          pcap_file(pcap_url, file)
+          Timeout.timeout(60 * 60 * 2) do
+            pcap_file(pcap_url, file)
+          end
           logger.debug "  save ok"
         rescue =>e
-          logger.error " save fail: #{$!}"
+          logger.error "  save fail: #{$!}"
+        rescue Timeout::Error
+          logger.error "  save fail: timeout in 2 hours"
         end
       end
     end
