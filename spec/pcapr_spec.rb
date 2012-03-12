@@ -40,6 +40,15 @@ describe Pcapr do
     @o.pcap_urls("dns").should be_include("/view/siim/2011/11/3/7/capture.pcap.html")
   end
   
+  it "file get it but not timeout" do
+    @o.login
+    pcap_url = "/view/sudhakar_gajjala/2010/6/1/21/6462.pcap.html"
+    file = File.join($helper_dir, 'timeout.pcap')
+    @o.pcap_file(pcap_url,file)
+    File.should be_exist(file)
+  end
+  
+  
   it "file get it " do
     @o.login
     pcap_url = "/view/siim/2011/11/3/7/capture.pcap.html"

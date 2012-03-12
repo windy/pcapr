@@ -16,6 +16,7 @@ class Pcapr
     #驱动浏览器底层的接口, patron对象
     @driver = Patron::Session.new
     @driver.timeout = 10000
+    @driver.connect_timeout = 10000
     @driver.base_url = "http://www.pcapr.net"
     @driver.handle_cookies
     
@@ -53,8 +54,11 @@ class Pcapr
   #获取该数据包文件
   def pcap_file(pcap_url, file)
     # set cookie
+    logger.debug("access url: #{pcap_url}")
     @driver.get(pcap_url)
+    logger.debug("download file: #{file}")
     res = @driver.get("/view/download")
+    logger.debug("download ok")
     File.open(file,"wb") do |f|
       f.write(res.body)
     end
