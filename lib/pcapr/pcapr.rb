@@ -15,13 +15,16 @@ class Pcapr
     
     #驱动浏览器底层的接口, patron对象
     @driver = Patron::Session.new
-    @driver.timeout = 10000
+    @driver.timeout = 60 * 60 # 1 hour
     @driver.connect_timeout = 10000
     @driver.base_url = "http://www.pcapr.net"
     @driver.handle_cookies
     
     @protos = nil
   end
+  
+  # for spec test
+  attr_reader :driver
   
   attr_accessor :logger
   

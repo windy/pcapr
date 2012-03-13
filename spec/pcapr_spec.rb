@@ -41,11 +41,15 @@ describe Pcapr do
   end
   
   it "file get it but not timeout" do
-    @o.login
-    pcap_url = "/view/sudhakar_gajjala/2010/6/1/21/6462.pcap.html"
-    file = File.join($helper_dir, 'timeout.pcap')
-    @o.pcap_file(pcap_url,file)
-    File.should be_exist(file)
+    begin
+      @o.login
+      pcap_url = "/view/sudhakar_gajjala/2010/6/1/21/6462.pcap.html"
+      file = File.join($helper_dir, 'timeout.pcap')
+      @o.driver.timeout = 1
+      lambda { @o.pcap_file(pcap_url,file) }.should raise_error(Patron::TimeoutError)
+    ensure
+      @o.driver.timeout = 60*60
+    end
   end
   
   
