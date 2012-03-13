@@ -40,7 +40,7 @@ describe Pcapr do
     @o.pcap_urls("dns").should be_include("/view/siim/2011/11/3/7/capture.pcap.html")
   end
   
-  it "file get it but not timeout" do
+  it "file get it but timeout" do
     begin
       @o.login
       pcap_url = "/view/sudhakar_gajjala/2010/6/1/21/6462.pcap.html"
@@ -52,6 +52,9 @@ describe Pcapr do
     end
   end
   
+  it "driver timeout default is 1 hour" do
+    @o.driver.timeout.should == 60*60
+  end
   
   it "file get it " do
     @o.login

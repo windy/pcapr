@@ -57,11 +57,8 @@ class Pcapr
   #获取该数据包文件
   def pcap_file(pcap_url, file)
     # set cookie
-    logger.debug("access url: #{pcap_url}")
     @driver.get(pcap_url)
-    logger.debug("download file: #{file}")
     res = @driver.get("/view/download")
-    logger.debug("download ok")
     File.open(file,"wb") do |f|
       f.write(res.body)
     end
@@ -78,14 +75,12 @@ class Pcapr
         file = File.join( proto_dir, File.basename(pcap_url).gsub(/\.html$/,"").tr("\\/:*?\"<>|"," ") )
         logger.info "  pcap file: #{file} save at '#{file}'"
         begin
-          Timeout.timeout(60 * 60 * 2) do
-            pcap_file(pcap_url, file)
-          end
+          pcap_file(pcap_url, file)
           logger.debug "  save ok"
+        rescue Patron::TimeoutError
+          logger.error "  save fail: timeout after #{@driver.timeout} seconds"
         rescue =>e
           logger.error "  save fail: #{$!}"
-        rescue Timeout::Error
-          logger.error "  save fail: timeout in 2 hours"
         end
       end
     end
