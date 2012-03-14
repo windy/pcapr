@@ -57,7 +57,7 @@ class Pcapr
     ret += nokogiri_parser.css("ul#p-main div.p-body>a").collect { |link| link['href'] }
     if nokogiri_parser.css('li.p-overflow a').size > 0
       href = nokogiri_parser.css('li.p-overflow a').attr('href').value
-      url = @driver.get("/browse" + href).body
+      url = @driver.get( "/browse" + href.gsub(" ","%20") ).body
       ret += Nokogiri::HTML(url).css('li.l0 div.p-body>a').collect { |link| link['href'] }
     end
     ret
@@ -82,7 +82,7 @@ class Pcapr
       logger.info "proto: #{proto}, downloading...(pcap save as: #{proto_dir}"
       pcap_urls(proto).each do |pcap_url|
         file = File.join( proto_dir, File.basename(pcap_url).gsub(/\.html$/,"").tr("\\/:*?\"<>|"," ") )
-        logger.info "  pcap file: #{file} save at '#{file}'"
+        logger.info "  pcap file: #{pcap_url} save at '#{file}'"
         begin
           pcap_file(pcap_url, file)
           logger.debug "  save ok"

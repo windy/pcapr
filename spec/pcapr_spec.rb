@@ -40,6 +40,10 @@ describe Pcapr do
     urls = @o.pcap_urls("afs (rx)")
     urls.size.should >= 7
     urls.should be_include("/view/tyson.key/2009/10/0/6/LiquidWar_Lobby_1_00002_20091101140004.pcap.html")
+    urls = @o.pcap_urls("fc els")
+    urls.size.should > 0
+    urls = @o.pcap_urls("gtp <ftp>")
+    urls.size.should > 0
   end
   
   it "should support more pcap urls" do
@@ -53,6 +57,16 @@ describe Pcapr do
     @o.pcap_urls("dns").should be_include("/view/siim/2011/11/3/7/capture.pcap.html")
   end
   
+  #~ it "should have pcap files more than 3000(excute slow)" do
+    #~ @o.login
+    #~ files = []
+    #~ @o.protos.each_with_index do |proto,i|
+      #~ @o.logger.info("proto: #{proto}, index=#{i}")
+      #~ files += @o.pcap_urls(proto)
+    #~ end
+    #~ files.should >= 3085
+  #~ end
+  
   it "file get it but timeout" do
     begin
       @o.login
@@ -62,6 +76,7 @@ describe Pcapr do
       lambda { @o.pcap_file(pcap_url,file) }.should raise_error(Patron::TimeoutError)
     ensure
       @o.driver.timeout = 60*60
+      File.delete(file) if File.exist?(file)
     end
   end
   
