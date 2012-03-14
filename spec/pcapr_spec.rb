@@ -35,6 +35,19 @@ describe Pcapr do
     @o.protos.should be_include("m2pa (id 12)")
   end
   
+  it "should get pcapfile urls when proto include quote" do
+    @o.login
+    urls = @o.pcap_urls("afs (rx)")
+    urls.size.should >= 7
+    urls.should be_include("/view/tyson.key/2009/10/0/6/LiquidWar_Lobby_1_00002_20091101140004.pcap.html")
+  end
+  
+  it "should support more pcap urls" do
+    @o.login
+    urls = @o.pcap_urls("dns")
+    urls.size.should == 34
+  end
+  
   it "all_proto should get auth.cap" do
     @o.login
     @o.pcap_urls("dns").should be_include("/view/siim/2011/11/3/7/capture.pcap.html")

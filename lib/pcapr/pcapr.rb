@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'patron'
 require 'digest'
 require 'timeout'
+require 'uri'
 
 require 'fileutils'
 
@@ -49,9 +50,17 @@ class Pcapr
   end
   
   def pcap_urls(proto)
-    #TODO
-    url = @driver.get("/browse?proto=#{proto}").body
-    Nokogiri::HTML(url).css("ul#p-main div.p-body>a").collect { |link| link['href'] }
+    ret = []
+    proto_url = URI.encode("/browse?proto=#{proto}")
+    url = @driver.get(proto_url).body
+    nokogiri_parser = Nokogiri::HTML(url)
+    ret += nokogiri_parser.css("ul#p-main div.p-body>a").collect { |link| link['href'] }
+    if nokogiri_parser.css('li.p-overflow a').size > 0
+      href = nokogiri_parser.css('li.p-overflow a').attr('href').value
+      url = @driver.get("/browse" + href).body
+      ret += Nokogiri::HTML(url).css('li.l0 div.p-body>a').collect { |link| link['href'] }
+    end
+    ret
   end
   
   #获取该数据包文件
