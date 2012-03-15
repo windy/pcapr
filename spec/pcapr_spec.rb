@@ -57,15 +57,15 @@ describe Pcapr do
     @o.pcap_urls("dns").should be_include("/view/siim/2011/11/3/7/capture.pcap.html")
   end
   
-  #~ it "should have pcap files more than 3000(excute slow)" do
-    #~ @o.login
-    #~ files = []
-    #~ @o.protos.each_with_index do |proto,i|
-      #~ @o.logger.info("proto: #{proto}, index=#{i}")
-      #~ files += @o.pcap_urls(proto)
-    #~ end
-    #~ files.should >= 3085
-  #~ end
+  it "should mkdir success when convert pcap url to dir name" do
+    ["gtp <ftp>", "gtp <ftp-data>", "gtp", "gtp icmp", "tacacs+", "wtp+wsp"].each do |proto|
+      dir = @o.send(:proto2dir_and_create, $helper_dir, proto)
+      File.should be_directory(dir)
+      file = @o.send(:pcap2file, dir, "http://www.pcapr.net/view/nos/2011/3/1/13/QoS_DL_40kbps.pcap.html")
+      lambda { File.open(file,"w"){} }.should_not raise_error
+      FileUtils.rm_rf(dir)
+    end
+  end
   
   it "file get it but timeout" do
     begin

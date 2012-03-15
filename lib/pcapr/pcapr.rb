@@ -77,11 +77,10 @@ class Pcapr
     base_dir = dir
     login
     protos.each do |proto|
-      proto_dir = File.join(base_dir, proto.tr("\\/:*?\"<>|"," "))
-      FileUtils.mkdir_p(proto_dir) unless File.directory?(proto_dir)
+      proto_dir = proto2dir_and_create(base_dir, proto)
       logger.info "proto: #{proto}, downloading...(pcap save as: #{proto_dir}"
       pcap_urls(proto).each do |pcap_url|
-        file = File.join( proto_dir, File.basename(pcap_url).gsub(/\.html$/,"").tr("\\/:*?\"<>|"," ") )
+        file = pcap2file(proto_dir, pcap_url)
         logger.info "  pcap file: #{pcap_url} save at '#{file}'"
         begin
           pcap_file(pcap_url, file)
@@ -109,6 +108,14 @@ class Pcapr
     end
   end
   
+  def proto2dir_and_create(base_dir, proto)
+    #must use strip to cut because mkdir_p ignore the space at last
+    proto_dir = File.join(base_dir, proto.tr("\\/:*?\"<>|"," ")).strip
+    FileUtils.mkdir_p(proto_dir) unless File.directory?(proto_dir)
+    proto_dir
+  end
   
-  
+  def pcap2file(proto_dir, pcap_url)
+    File.join( proto_dir, File.basename(pcap_url).gsub(/\.html$/,"").tr("\\/:*?\"<>|"," ") )
+  end
 end
