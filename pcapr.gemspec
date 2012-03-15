@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Pcapr::VERSION
   s.authors     = ["yafei LI"]
   s.email       = ["lyfi2003@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{a library for downloading all pcap files from pcapr.net}
-  s.description = %q{a library for downloading all pcap files from pcapr.net}
+  s.homepage    = "https://github.com/windy/pcapr"
+  s.summary     = %q{a tool for downloading all pcap files from pcapr.net}
+  s.description = %q{a tool for downloading all pcap files from pcapr.net}
 
   s.rubyforge_project = "pcapr"
 
